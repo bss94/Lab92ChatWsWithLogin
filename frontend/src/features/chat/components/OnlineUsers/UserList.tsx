@@ -1,10 +1,30 @@
+import Grid from "@mui/material/Grid2";
+import {Typography} from "@mui/material";
+import React from "react";
+import {OnlineUser} from "../../../../types.ts";
+
+interface Props{
+    users:OnlineUser[]
+}
 
 
-const UserList = () => {
+const UserList:React.FC<Props> = ({users}) => {
     return (
-        <div>
+        <Grid container
+              spacing={1}
+              direction="column"
 
-        </div>
+            >
+            {users.map(user=>{
+                return(
+                    <Grid key={user._id}>
+                    <Typography  variant='h6'>{user.username}</Typography>
+                </Grid>
+                )
+            })}
+
+
+        </Grid>
     );
 };
 
