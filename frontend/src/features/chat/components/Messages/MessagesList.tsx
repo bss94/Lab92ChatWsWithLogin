@@ -7,25 +7,27 @@ import MessageItem from './MessageItem.tsx';
 
 interface Props {
   messages: Message[];
+  removeMessage: (messageId: string) => void;
 }
 
-const MessagesList: React.FC<Props> = ({messages}) => {
+const MessagesList: React.FC<Props> = ({messages, removeMessage}) => {
   const user = useAppSelector(selectUser);
   return (
     <Grid container
           border={'solid 1px rgba(0,0,0,0.17)'}
           borderRadius={3}
+          alignContent="start"
           overflow="auto"
           sx={{
             height: 600,
-            overflowAnchor:'auto',
+            overflowAnchor: 'auto',
             px: 2,
             py: 1,
             mb: 1
           }}>
       {messages.map((message) => (
         <Grid size={12} key={message._id}>
-          <MessageItem message={message} user={user}/>
+          <MessageItem message={message} user={user} removeMessage={removeMessage}/>
         </Grid>
       ))}
 

@@ -1,15 +1,22 @@
 import Grid from '@mui/material/Grid2';
-import {Typography} from '@mui/material';
+import {IconButton, Typography} from '@mui/material';
 import {setDate} from '../../../../constants.ts';
 import React from 'react';
 import {Message, User} from '../../../../types.ts';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 interface Props {
   message: Message;
   user: User | null;
+  removeMessage: (messageId: string) => void;
 }
 
-const MessageItem: React.FC<Props> = ({message, user}) => {
+const MessageItem: React.FC<Props> = ({message, user, removeMessage}) => {
+
+  const deleteMessage = (messageId: string) => {
+    void removeMessage(messageId);
+  };
+
   return (
     <Grid container sx={{
       border: 'solid 1px rgba(0,0,0,0.17)',
@@ -24,15 +31,36 @@ const MessageItem: React.FC<Props> = ({message, user}) => {
         </Typography>
       </Grid>
       <Grid size={3}>
-        <Typography variant="body2" textAlign='end' sx={{color: 'text.secondary'}}>
+        <Typography variant="body2" textAlign="end" sx={{color: 'text.secondary'}}>
           {setDate(message.datetime)}
         </Typography>
       </Grid>
-      <Grid size={12}>
-        <Typography variant="body2" >
-          {message.message}
-        </Typography>
-      </Grid>
+
+      {user && (user.role === 'admin' || user.role === 'moderator') ? (
+          <>
+            <Grid size={11}>
+              <Typography variant="body2">
+                {message.message}
+              </Typography>
+            </Grid>
+            <Grid size={1}>
+              <IconButton color="error" size="small" onClick={() => {
+                deleteMessage(message._id);
+              }}>
+                <DeleteOutlineIcon/>
+              </IconButton>
+            </Grid>
+          </>
+        ) :
+        <>
+          <Grid size={12}>
+            <Typography variant="body2">
+              {message.message}
+            </Typography>
+          </Grid>
+        </>
+      }
+
     </Grid>
   );
 };

@@ -1,31 +1,29 @@
-import Grid from "@mui/material/Grid2";
-import {Typography} from "@mui/material";
-import React from "react";
-import {OnlineUser} from "../../../../types.ts";
+import Grid from '@mui/material/Grid2';
+import React from 'react';
+import {OnlineUser} from '../../../../types.ts';
+import UserListItem from './UserListItem.tsx';
 
-interface Props{
-    users:OnlineUser[]
+interface Props {
+  users: OnlineUser[];
 }
 
 
-const UserList:React.FC<Props> = ({users}) => {
-    return (
-        <Grid container
-              spacing={1}
-              direction="column"
+const UserList: React.FC<Props> = ({users}) => {
+  return (
+    <Grid container
+          spacing={1}
+          direction="column"
 
-            >
-            {users.map(user=>{
-                return(
-                    <Grid key={user._id}>
-                    <Typography  variant='h6'>{user.username}</Typography>
-                </Grid>
-                )
-            })}
+    >
+      {users.map(user => {
+        return (
+          <UserListItem key={user._id} user={user}/>
+        );
+      })}
 
 
-        </Grid>
-    );
+    </Grid>
+  );
 };
 
 export default UserList;

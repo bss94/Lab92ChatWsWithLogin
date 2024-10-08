@@ -39,6 +39,16 @@ router.ws('/chat', (ws, req) => {
     const index = connectedClients.findIndex((client => client.ws === ws));
     connectedClients.splice(index, 1);
     console.log('client disconnected, total clients', connectedClients.length);
+
+    const users = connectedClients.map(user => {
+      return user.user;
+    });
+    connectedClients.forEach((client) => {
+      client.ws.send(JSON.stringify({
+        type: 'LOGINED',
+        payload: users,
+      }));
+    });
   });
 
   ws.on('message', async (message) => {
@@ -92,6 +102,15 @@ router.ws('/chat', (ws, req) => {
           client.ws.send(JSON.stringify({
             type: 'NEW_MESSAGE',
             payload: message,
+          }));
+        });
+      } else if (decodedMessage.type === 'DELETE_MESSAGE') {
+        const message = await Message.findOneAndDelete({_id: decodedMessage.payload});
+
+        connectedClients.forEach((client) => {
+          client.ws.send(JSON.stringify({
+            type: 'DELETED_MESSAGE',
+            payload: decodedMessage.payload,
           }));
         });
       }
